@@ -1,9 +1,9 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: create-react-app-template
-  title: Create React App Template
-  description: Create a new CRA website project
+  name: sourcefuse-react-boilerplate-ui
+  title: sourcefuse-react-boilerplate-ui
+  description: sourcefuse-react-boilerplate-ui
   tags:
     - react
     - cra
