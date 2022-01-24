@@ -1,12 +1,12 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: sourcefuse-react-boilerplate-ui
-  title: sourcefuse-react-boilerplate-ui
-  description: sourcefuse-react-boilerplate-ui
+  name: sourcefuse-terraform-aws-ref-arch-bootstrap
+  title: sourcefuse-terraform-aws-ref-arch-bootstrap
+  description: sourcefuse-terraform-aws-ref-arch-bootstrap
   tags:
-    - react
-    - cra
+    - terraform
+    - AWS
 spec:
   owner: sourcefuse.com
   type: website
