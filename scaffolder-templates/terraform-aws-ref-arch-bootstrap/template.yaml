@@ -18,7 +18,6 @@ spec:
         - profile
         - bucket_name
         - dynamodb_lock_table_name
-        - component_id
         - owner
       properties:
         component_id:
