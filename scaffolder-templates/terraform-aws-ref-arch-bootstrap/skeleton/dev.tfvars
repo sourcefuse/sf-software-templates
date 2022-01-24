@@ -1,10 +1,10 @@
-region                   = "us-east-1"
-profile                  = "sf_ref_arch"
-bucket_name              = "sf-ref-arch-terraform-state"
-dynamodb_lock_table_name = "sf_ref_arch_terraform_state"
+region                   = ${{ values.region }}
+profile                  = ${{ values.profile }}
+bucket_name              = ${{ values.bucket_name }}
+dynamodb_lock_table_name = ${{ values.dynamodb_lock_table_name }}
 tags = {
   Environment = "dev"
   ENV         = "dev"
-  Project     = "sf-ref-arch"
+  Project     = ${{ values.component_id }}
   Creator     = "terraform"
 }

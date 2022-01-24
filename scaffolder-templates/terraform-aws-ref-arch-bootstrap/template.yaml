@@ -14,12 +14,33 @@ spec:
     - title: Provide some simple information
       required:
         - component_id
+        - region
+        - profile
+        - bucket_name
+        - dynamodb_lock_table_name
+        - component_id
         - owner
       properties:
         component_id:
           title: Name
           type: string
           description: Unique name of the component
+        region:
+          title: AWS region
+          type: string
+          description: AWS region to deploy to
+        profile:
+          title: AWS Profile
+          type: string
+          description: AWS Profile to use
+        bucket_name:
+          title: Bucket Name
+          type: string
+          description: Name of the bucket to use for Terraform State
+        dynamodb_lock_table_name:
+          title: Dynamo Lock Table
+          type: string
+          description: Name of the dynamodb table for state locking
         description:
           title: Description
           type: string
@@ -53,6 +74,10 @@ spec:
           - .github/workflows/*
         values:
           component_id: ${{ parameters.component_id }}
+          region: ${{ parameters.region }}
+          profile: ${{ parameters.profile }}
+          bucket_name: ${{ parameters.bucket_name }}
+          dynamodb_lock_table_name: ${{ parameters.dynamodb_lock_table_name }}
           description: ${{ parameters.description }}
           destination: ${{ parameters.repoUrl | parseRepoUrl }}
           owner: ${{ parameters.owner }}
