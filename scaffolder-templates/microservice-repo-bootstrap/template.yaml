@@ -1,0 +1,98 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+# some metadata about the template itself
+metadata:
+  name: v1beta3-demo
+  title: Microservices Monorepo template
+  description: A Template to setup a sourceloop based monorepo on Github
+  tags:
+    - sourceloop
+    - loopback4
+    - backend
+    - Monorepo
+spec:
+  owner: backstage/techdocs-core
+  type: service
+
+  # these are the steps which are rendered in the frontend with the form input
+  parameters:
+    - title: Fill in the repo name steps
+      required:
+        - name
+      properties:
+        name:
+          title: Name
+          type: string
+          description: Unique name of the repo
+          ui:autofocus: true
+          ui:options:
+            rows: 5
+    - title: Choose a location
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+    - title: Choose the services that you want to integrate
+      required:
+        - services
+      properties:
+        services: 
+          title: Microservices
+          type: "array"
+          ui:widget: "checkboxes"
+          items:
+            type: "string"
+            enum:
+              - authentication-service
+              - audit-service
+              - bpmn-service
+              - chat-service
+              - feature-toggle-service
+              - in-mail-service
+              - notification-service
+              - payment-service
+              - reporting-service
+              - scheduler-service
+              - search-service
+              - video-conferencing-service
+          uniqueItems: true     
+    - title: Choose the DB Type you would use
+      required:
+        - datasourceType
+      properties:
+        datasourceType:
+          title: Datasource Type
+          type: "string"
+          enum:
+            - mysql
+            - postgres
+
+
+
+  # here's the steps that are executed in series in the scaffolder backend
+  steps:
+    - id: generate
+      name: Generate Scaffold
+      action: run:scaffold
+      input:
+        name: ${{ parameters.name }}
+    - id: services
+      name: Add Services
+      action: run:microservice
+      input:
+        services: ${{ parameters.services }}
+        project: ${{ parameters.name }}
+        datasourceType: ${{ parameters.datasourceType }}
+    - id: publish
+      name: Publish
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        description: This is ${{ parameters.name }}
+        repoUrl: ${{ parameters.repoUrl }}
