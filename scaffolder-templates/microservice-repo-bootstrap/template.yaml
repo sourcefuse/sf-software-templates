@@ -2,7 +2,7 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 # some metadata about the template itself
 metadata:
-  name: v1beta3-demo
+  name: microservices-monorepo-template
   title: Microservices Monorepo template
   description: A Template to setup a sourceloop based monorepo on Github
   tags:
@@ -38,9 +38,7 @@ spec:
           ui:options:
             allowedHosts:
               - github.com
-    - title: Choose the services that you want to integrate
-      required:
-        - services
+    - title: Choose the sourceloop services that you want to integrate
       properties:
         services: 
           title: Microservices
@@ -61,7 +59,41 @@ spec:
               - scheduler-service
               - search-service
               - video-conferencing-service
-          uniqueItems: true     
+          uniqueItems: true
+    - title: Custom services
+      properties:
+        customServices:
+          title: Custom Microservices
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              name:
+                type: "string"
+          ui:options:
+            orderable: false
+    - title: Facades
+      properties:
+        facades:
+          title: Custom facades
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              name:
+                type: "string"
+          ui:options:
+            orderable: false
+    - title: Packages 
+      properties:
+        packages:
+          title: Custom Packages
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              name:
+                type: "string"
     - title: Choose the DB Type you would use
       required:
         - datasourceType
@@ -72,6 +104,13 @@ spec:
           enum:
             - mysql
             - postgres
+    - title: Issue prefix
+      required:
+        - issuePrefix
+      properties:
+        issuePrefix:
+          title: Prefix to be used for issues
+          type: "string"
 
 
 
@@ -82,13 +121,43 @@ spec:
       action: run:scaffold
       input:
         name: ${{ parameters.name }}
+        issuePrefix: ${{ parameters.issuePrefix }}
     - id: services
-      name: Add Services
+      name: Add Sourceloop Services
+      if: ${{parameters.services}}
       action: run:microservice
       input:
+        sourceloop: true
+        facade: false
         services: ${{ parameters.services }}
         project: ${{ parameters.name }}
         datasourceType: ${{ parameters.datasourceType }}
+    - id: customServices
+      name: Add Custom Services
+      if: ${{ parameters.customServices }}
+      action: run:microservice
+      input:
+        sourceloop: false
+        facade: false
+        services: ${{ parameters.customServices }}
+        project: ${{ parameters.name }}
+        datasourceType: ${{ parameters.datasourceType }}
+    - id: facades
+      name: Add Facades
+      if: ${{ parameters.facades }}
+      action: run:microservice
+      input:
+        sourceloop: false
+        facade: true
+        services: ${{ parameters.facades }}
+        project: ${{ parameters.name }}
+        datasourceType: ${{ parameters.datasourceType }}
+    - id: extensions
+      name: Add packages
+      if: ${{ parameters.packages }}
+      action: run:extension
+      input:
+        extensions: ${{ parameters.packages }}
     - id: publish
       name: Publish
       action: publish:github
