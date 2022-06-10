@@ -9,7 +9,7 @@ metadata:
     - sourceloop
     - loopback4
     - backend
-    - Monorepo
+    - monorepo
 spec:
   owner: backstage/techdocs-core
   type: service
