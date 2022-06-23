@@ -55,7 +55,6 @@ spec:
               - in-mail-service
               - notification-service
               - payment-service
-              - reporting-service
               - scheduler-service
               - search-service
               - video-conferencing-service
