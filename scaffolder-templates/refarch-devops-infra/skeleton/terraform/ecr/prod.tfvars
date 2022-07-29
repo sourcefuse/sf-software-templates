@@ -1,2 +1,0 @@
-profile     = "refarchprod"
-environment = "prod"
