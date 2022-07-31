@@ -16,9 +16,11 @@ spec:
 
   # these are the steps which are rendered in the frontend with the form input
   parameters:
-    - title: Fill in the repo name steps
+    - title: Fill in the project and repo details
       required:
         - name
+        - description
+        - repoUrl
       properties:
         name:
           title: Name
@@ -27,10 +29,10 @@ spec:
           ui:autofocus: true
           ui:options:
             rows: 5
-    - title: Choose a location
-      required:
-        - repoUrl
-      properties:
+        description:
+          title: Description
+          type: string
+          description: Help others understand what this project is for.
         repoUrl:
           title: Repository Location
           type: string
@@ -38,6 +40,7 @@ spec:
           ui:options:
             allowedHosts:
               - github.com
+
     - title: Choose the sourceloop services that you want to integrate
       properties:
         services: 
@@ -55,6 +58,7 @@ spec:
               - in-mail-service
               - notification-service
               - payment-service
+              - reporting-service
               - scheduler-service
               - search-service
               - video-conferencing-service
@@ -121,6 +125,8 @@ spec:
       input:
         name: ${{ parameters.name }}
         issuePrefix: ${{ parameters.issuePrefix }}
+        repoUrl: ${{ parameters.repoUrl | parseRepoUrl }}
+        description: ${{ parameters.description }}
     - id: services
       name: Add Sourceloop Services
       if: ${{parameters.services}}
@@ -164,3 +170,15 @@ spec:
         allowedHosts: ['github.com']
         description: This is ${{ parameters.name }}
         repoUrl: ${{ parameters.repoUrl }}
+        
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: "/catalog-info.yml"
+        optional: true
+
+  output:
+    remoteUrl: ${{ steps.publish.output.remoteUrl }}
+    entityRef: ${{ steps.register.output.entityRef }}
