@@ -14,7 +14,6 @@ spec:
     - title: Provide some simple information
       required:
         - component_id
-        - owner
       properties:
         component_id:
           title: Name
@@ -24,14 +23,6 @@ spec:
           title: Description
           type: string
           description: Help others understand what this website is for.
-        owner:
-          title: Owner
-          type: string
-          description: Owner of the component
-          ui:field: OwnerPicker
-          ui:options:
-            allowedKinds:
-              - Group
     - title: Choose a location
       required:
         - repoUrl
@@ -55,7 +46,7 @@ spec:
           component_id: ${{ parameters.component_id }}
           description: ${{ parameters.description }}
           destination: ${{ parameters.repoUrl | parseRepoUrl }}
-          owner: ${{ parameters.owner }}
+          backstage_namespace: ${{ parameters.backstage_namespace }}
 
     - id: publish
       name: Publish
