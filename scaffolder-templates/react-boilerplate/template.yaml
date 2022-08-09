@@ -23,6 +23,10 @@ spec:
           title: Description
           type: string
           description: Help others understand what this website is for.
+        backstage_namespace:
+          title: Backstage namespace
+          type: string
+          description: Backstage namespace for the output component
     - title: Choose a location
       required:
         - repoUrl
