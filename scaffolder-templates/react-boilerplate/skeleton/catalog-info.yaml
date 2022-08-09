@@ -3,10 +3,11 @@ kind: Component
 metadata:
   name: ${{values.component_id | dump}}
   description: ${{values.description | dump}}
+  namespace: ${{values.backstage_namespace | dump}}
   annotations:
     github.com/project-slug: ${{values.destination.owner + "/" + values.destination.repo}}
     backstage.io/techdocs-ref: dir:.
 spec:
   type: website
   lifecycle: experimental
-  owner: ${{values.owner | dump}}
+  owner: ${{values.destination.owner}}
