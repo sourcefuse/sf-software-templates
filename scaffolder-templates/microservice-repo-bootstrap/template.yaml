@@ -62,6 +62,8 @@ spec:
               - scheduler-service
               - search-service
               - video-conferencing-service
+              - user-tenant-service
+              - survey-service
           uniqueItems: true
     - title: Custom services
       properties:
