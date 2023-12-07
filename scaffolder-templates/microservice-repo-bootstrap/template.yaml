@@ -4,7 +4,7 @@ kind: Template
 metadata:
   name: arc-backend-microservice
   title: ARC Backend Microservices
-  description: A Template to setup a ARC based monorepo on Github
+  description: A Template to setup an ARC based monorepo for backend microservices
   tags:
     - sourceloop
     - loopback4
