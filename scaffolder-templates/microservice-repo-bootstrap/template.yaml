@@ -2,9 +2,9 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 # some metadata about the template itself
 metadata:
-  name: microservices-monorepo-template
-  title: Microservices Monorepo template
-  description: A Template to setup a sourceloop based monorepo on Github
+  name: arc-backend-microservice
+  title: ARC Backend Microservices
+  description: A Template to setup an ARC based monorepo for backend microservices
   tags:
     - sourceloop
     - loopback4
