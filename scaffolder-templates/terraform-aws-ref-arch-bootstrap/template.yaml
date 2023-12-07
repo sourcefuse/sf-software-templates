@@ -2,8 +2,8 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: sourcefuse-terraform-aws-ref-arch-bootstrap
-  title: sourcefuse-terraform-aws-ref-arch-bootstrap
-  description: sourcefuse-terraform-aws-ref-arch-bootstrap
+  title: ARC - AWS Ref Arch Bootstrap
+  description: ARC - AWS Ref Arch Bootstrap
   tags:
     - terraform
     - aws
