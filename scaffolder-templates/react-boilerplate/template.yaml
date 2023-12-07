@@ -1,9 +1,9 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: sourcefuse-react-boilerplate-ui
-  title: sourcefuse-react-boilerplate-ui
-  description: sourcefuse-react-boilerplate-ui
+  name: arc-react-boilerplate-ui
+  title: ARC React Boilerplate
+  description: ARC React Boilerplate
   tags:
     - react
     - cra
