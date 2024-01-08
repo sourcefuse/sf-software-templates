@@ -16,11 +16,11 @@ spec:
 
   # these are the steps which are rendered in the frontend with the form input
   parameters:
-    - title: Fill in the project and repo details
+    - title: Fill in the project details
       required:
         - name
         - description
-        - repoUrl
+        - owner
       properties:
         name:
           title: Name
@@ -33,6 +33,19 @@ spec:
           title: Description
           type: string
           description: Help others understand what this project is for.
+        owner:
+          title: Owner
+          type: string
+          description: Owner of the component
+          ui:field: OwnerPicker
+          ui:options:
+            allowedKinds:
+              - Group
+              
+    - title: Fill in the repo details
+      required:
+        - repoUrl
+      properties:
         repoUrl:
           title: Repository Location
           type: string
