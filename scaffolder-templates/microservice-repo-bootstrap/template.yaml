@@ -3,7 +3,7 @@ kind: Template
 # some metadata about the template itself
 metadata:
   name: arc-backend-microservice-1
-  title: ARC Backend Microservices One
+  title: ARC Backend Microservices two
   description: A Template to setup an ARC based monorepo for backend microservices
   tags:
     - sourceloop
