@@ -1,73 +1,74 @@
-import DatePicker from '@mui/lab/DatePicker';
-import FormControl from '@mui/material/FormControl';
-import FormHelperText from '@mui/material/FormHelperText';
-import InputLabel from '@mui/material/InputLabel';
-import TextField from '@mui/material/TextField';
-import React, {memo} from 'react';
+import {FormControl, FormHelperText, SxProps, Theme} from '@mui/material';
+import TextField, {TextFieldProps} from '@mui/material/TextField';
+import {DatePicker as MuiDatePicker, DatePickerProps as MuiDatePickerProps} from '@mui/x-date-pickers/DatePicker';
+import InputLabel from 'Components/InputLabel';
+import React, {memo, useCallback} from 'react';
 
-interface Props {
+type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+
+export interface DatePickerProps {
   id: string;
   label?: string;
-  value?: any;
-  onChange: any;
+  onChange?: (val: Date | null) => void;
   disabled?: boolean;
-  isTouched?: boolean;
-  returnValue?: boolean;
   errorMessage?: string;
   helperText?: string;
+  minDateTime?: Date;
+  sx?: SxProps<Theme>;
 }
-const Datepicker: React.FC<Props> = ({
+
+interface Props extends DatePickerProps {
+  value?: Date | null;
+}
+
+const DatePicker: React.FC<Props & PartialBy<MuiDatePickerProps<Date | null, Date>, 'renderInput'>> = ({
   id,
   label,
   value,
   onChange,
   errorMessage,
-  isTouched,
+  sx,
   disabled,
-  returnValue,
   helperText,
   ...rest
 }) => {
-  const isError = errorMessage && isTouched && !disabled;
+  const isError = !!errorMessage;
+  const handleChange = useCallback(
+    (date: Date | null) => {
+      if (onChange) onChange(date);
+    },
+    [onChange],
+  );
+
+  const handleRenderInput = useCallback(
+    (params: TextFieldProps) => {
+      return (
+        <>
+          {label && <InputLabel htmlFor={id}>{label}</InputLabel>}
+          <TextField sx={{marginTop: 2}} {...params} />
+        </>
+      );
+    },
+    [id, label],
+  );
+
   return (
-    <FormControl sx={{width: 1}} data-testid="datePickerFormControl">
-      {label && (
-        <InputLabel error={!!isError} shrink htmlFor={id}>
-          {label}
-        </InputLabel>
-      )}
-      <DatePicker
+    <FormControl sx={{width: 1, ...sx}} data-testid="datePickerFormControl" disabled={disabled} error={isError}>
+      <MuiDatePicker
         InputAdornmentProps={{
           position: 'start',
         }}
-        value={value}
-        onChange={(date) => {
-          if (returnValue) {
-            onChange(date);
-          } else {
-            const event = {
-              target: {
-                name: id,
-                value: date,
-              },
-            };
-            onChange(event);
-          }
+        InputProps={{
+          sx: {
+            '.MuiInputBase-input': {
+              padding: 1,
+            },
+          },
         }}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            variant="outlined"
-            sx={{
-              marginTop: 2,
-              '& .MuiOutlinedInput-root': {
-                '& input': {
-                  padding: 1,
-                },
-              },
-            }}
-          />
-        )}
+        disabled={disabled}
+        value={value}
+        onChange={handleChange}
+        renderInput={handleRenderInput}
         {...rest}
       />
       {(isError || helperText) && <FormHelperText>{isError ? errorMessage : helperText}</FormHelperText>}
@@ -75,4 +76,4 @@ const Datepicker: React.FC<Props> = ({
   );
 };
 
-export default memo(Datepicker);
+export default memo(DatePicker);

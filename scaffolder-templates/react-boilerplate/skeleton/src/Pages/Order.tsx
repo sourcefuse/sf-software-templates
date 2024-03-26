@@ -6,12 +6,12 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Button from 'Components/Button/Button';
 import PagePaper from 'Components/PagePaper';
-import React from 'react';
 import {useNavigate} from 'react-router-dom';
 
 const Order = () => {
+  const DECIMAL_PLACES = 2;
   const navigate = useNavigate();
-  function handleCheckOut(amount) {
+  function handleCheckOut(amount: number) {
     navigate('/sourceloop/payment/checkout', {state: {amount, type: 'orders'}});
   }
 
@@ -38,7 +38,7 @@ const Order = () => {
       price: 999,
     },
   ];
-
+  /* sonar ignore start */
   return (
     <PagePaper title="Order">
       <Typography variant="h5" component="h1" align="center" gutterBottom>
@@ -47,7 +47,7 @@ const Order = () => {
       <Grid container spacing={2}>
         {productList.map((product, index) => {
           return (
-            <Grid item xs={12} sm={6} md={6} lg={4} key={index}>
+            <Grid item xs={12} sm={6} md={6} lg={4} key={product?.imageUrl}>
               <Card>
                 <CardMedia component="img" height="200" image={product?.imageUrl} alt="green iguana" />
                 <CardContent>
@@ -59,7 +59,7 @@ const Order = () => {
                   </Typography>
                 </CardContent>
                 <CardActions sx={{display: 'flex', justifyContent: 'space-between'}}>
-                  <Typography>₹ {product?.price.toFixed(2)}</Typography>
+                  <Typography>₹ {product?.price.toFixed(DECIMAL_PLACES)}</Typography>
                   <Button
                     size="small"
                     onClick={() => {
@@ -79,3 +79,4 @@ const Order = () => {
 };
 
 export default Order;
+/* sonar ignore end */

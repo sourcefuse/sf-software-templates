@@ -1,27 +1,27 @@
 const styles = {
   link: {
-    borderTopRightRadius: 20,
-    borderBottomRightRadius: 20,
+    height: '30px',
     paddingY: 0.5,
     paddingX: 1,
     textTransform: 'capitalize',
     fontSize: 14,
     '&:hover': {
-      backgroundColor: 'primary.main',
-      color: '#fff',
+      backgroundColor: '#F7F7F7',
+      // color: '#fff',
       '& .MuiListItemIcon-root, .MuiSvgIcon-root, .MuiListItemText-root': {
-        color: '#fff',
+        // color: '#fff',
       },
     },
   },
-  linkListActive: {backgroundColor: 'secondary.light', color: 'primary.main'},
+  linkListActive: {backgroundColor: '#F7F7F7'},
   linkTextActive: {
-    color: `primary.main`,
     fontWeight: 'bold !important',
+
+    fontSize: '14px',
   },
   listItemIcon: {minWidth: 30},
   linkItemIconActive: {
-    color: `primary.main`,
+    color: `secondary.main`,
   },
   divider: {marginTop: 1, marginBottom: 1, height: 2},
   title: {paddingX: 1, textTransform: 'uppercase', fontWeight: 'bold'},

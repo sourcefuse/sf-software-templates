@@ -1,9 +1,10 @@
-import CodeBlock from 'Components/CodeBlock/CodeBlock';
-import ComponentPaper from 'Components/ComponentPaper';
+import {Box, Stack} from '@mui/material';
+import ComponentViewer from 'Components/ComponentViewer';
 import PagePaper from 'Components/PagePaper';
-import Table from 'Components/Table';
+import PropsTable from 'Components/PropsTable';
+import ScreenAwareTOC from 'Components/ScreenAwareTOC';
 import TransferList from 'Components/TransferList/TransferList';
-import React, {useState} from 'react';
+import {useState} from 'react';
 
 const TransferListPage = () => {
   const [left, setLeft] = useState([
@@ -19,12 +20,12 @@ const TransferListPage = () => {
     {value: 'ri4', label: 'Right item 4'},
   ]);
   return (
-    <PagePaper title="Transfer List">
-      <ComponentPaper>
-        <TransferList left={left} right={right} setLeft={setLeft} setRight={setRight} />
-      </ComponentPaper>
-      <CodeBlock
-        fullCode={`import ComponentPaper from "Components/ComponentPaper";
+    <Stack direction="row">
+      <Box sx={{flexGrow: 1, maxWidth: '99vw'}}>
+        <PagePaper title="Transfer List">
+          <ComponentViewer
+            title="Default Transfer List"
+            code={`import ComponentPaper from "Components/ComponentPaper";
 import PagePaper from "Components/PagePaper";
 import TransferList from "Components/TransferList/TransferList";
 import { useState } from "react";
@@ -57,16 +58,20 @@ const TransferListPage = () => {
 };
 
 export default TransferListPage;`}
-        initial={`<TransferList left={left} right={right} setLeft={setLeft} setRight={setRight} />`}
-      />
-      <Table
-        data={[
-          {name: 'left,setLeft', type: 'React state', desc: 'useState variables to manage left side list'},
-          {name: 'right,setRight', type: 'React state', desc: 'useState variables to manage right side list'},
-          {name: 'height', type: 'number', defaultVal: 200, desc: 'Set height of transfer window in px'},
-        ]}
-      />
-    </PagePaper>
+          >
+            <TransferList left={left} right={right} setLeft={setLeft} setRight={setRight} />
+          </ComponentViewer>
+          <PropsTable
+            data={[
+              {name: 'left,setLeft', type: 'React state', desc: 'useState variables to manage left side list'},
+              {name: 'right,setRight', type: 'React state', desc: 'useState variables to manage right side list'},
+              {name: 'height', type: 'number', defaultVal: 200, desc: 'Set height of transfer window in px'},
+            ]}
+          />
+        </PagePaper>
+      </Box>
+      <ScreenAwareTOC />
+    </Stack>
   );
 };
 

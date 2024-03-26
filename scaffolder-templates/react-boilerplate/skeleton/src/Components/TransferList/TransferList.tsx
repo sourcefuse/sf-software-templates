@@ -2,38 +2,61 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Button from 'Components/Button/Button';
-import PropTypes from 'prop-types';
-import React, {useRef, useState} from 'react';
-import {DragDropContext, Droppable} from 'react-beautiful-dnd';
+import React, {ReactNode, RefObject, useRef, useState} from 'react';
+import {DragDropContext, DropResult, Droppable} from 'react-beautiful-dnd';
 import CustomList from './CustomList';
 
-interface Props {
+type ListDispatchActionType = React.Dispatch<
+  React.SetStateAction<
+    {
+      value: string;
+      label: string;
+    }[]
+  >
+>;
+
+export interface TransferListProps {
   left: Array<{label: string; value: string}>;
-  setLeft: any;
+  setLeft: ListDispatchActionType;
   right: Array<{label: string; value: string}>;
-  setRight: any;
+  setRight: ListDispatchActionType;
   height?: number;
 }
+const DEFAULT_HEIGHT = 200;
 
-function not(arr1, arr2) {
-  return arr1.filter((item1) => arr2.every((item2) => item2.value !== item1.value));
+function not(arr1: {label: string; value: string}[], arr2: {label: string; value: string}[]) {
+  return arr1.filter(item1 => arr2.every(item2 => item2.value !== item1.value));
 }
 
-function intersection(arr1, arr2) {
-  return arr1.filter((item1) => arr2.some((item2) => item2.value === item1.value));
+function intersection(arr1: {label: string; value: string}[], arr2: {label: string; value: string}[]) {
+  return arr1.filter(item1 => arr2.some(item2 => item2.value === item1.value));
 }
 
-const TransferList: React.FC<Props> = ({left = [], setLeft, right = [], setRight, height = 200}) => {
-  const leftRef: any = useRef(null);
-  const rightRef: any = useRef(null);
+const IconButton = ({text, ...rest}: {text: ReactNode; onClick: () => void; disabled: boolean}) => (
+  <Button {...rest}>
+    <Box component="span" sx={{transform: {md: 'rotate(0deg)', xs: 'rotate(90deg)'}}}>
+      {text}
+    </Box>
+  </Button>
+);
 
-  const [checked, setChecked]: any = useState([]);
+const TransferList: React.FC<TransferListProps> = ({
+  left = [],
+  setLeft,
+  right = [],
+  setRight,
+  height = DEFAULT_HEIGHT,
+}) => {
+  const leftRef: RefObject<HTMLLIElement> = useRef(null);
+  const rightRef: RefObject<HTMLLIElement> = useRef(null);
+
+  const [checked, setChecked] = useState<{label: string; value: string}[]>([]);
   const leftChecked = intersection(checked, left);
   const rightChecked = intersection(checked, right);
 
-  const handleToggle = (item: any) => () => {
+  const handleToggle = (item: {label: string; value: string}) => () => {
     const currentIndex = checked.map(({value}) => value).indexOf(item.value);
-    const newChecked: any = [...checked];
+    const newChecked: Array<{label: string; value: string}> = [...checked];
 
     if (currentIndex === -1) {
       newChecked.push(item);
@@ -72,23 +95,25 @@ const TransferList: React.FC<Props> = ({left = [], setLeft, right = [], setRight
     setChecked([]);
   };
 
-  const IconButton = ({text, ...rest}) => (
-    <Button {...rest}>
-      <Box component="span" sx={{transform: {md: 'rotate(0deg)', xs: 'rotate(90deg)'}}}>
-        {text}
-      </Box>
-    </Button>
-  );
-
-  IconButton.propTypes = {
-    text: PropTypes.any.isRequired,
-  };
-
-  const customList = ({items, title, includeIcon = false, droppableId, checked, columnRef}) => {
+  const customList = ({
+    items,
+    title,
+    includeIcon = false,
+    droppableId,
+    checked,
+    columnRef,
+  }: {
+    items: {label: string; value: string}[];
+    title: string;
+    includeIcon?: boolean;
+    droppableId: string;
+    checked: {label: string; value: string}[];
+    columnRef: RefObject<HTMLLIElement>;
+  }) => {
     return (
       <Grid item sx={{padding: '0px !important'}} xs={12} sm={12} md={5} lg={5} data-testid={droppableId}>
         <Droppable droppableId={droppableId}>
-          {(provided) => (
+          {provided => (
             <div ref={provided.innerRef} {...provided.droppableProps}>
               <CustomList
                 title={title}
@@ -106,7 +131,8 @@ const TransferList: React.FC<Props> = ({left = [], setLeft, right = [], setRight
     );
   };
 
-  const onDragEnd = ({source, destination}) => {
+  const onDragEnd = (dropResult: DropResult) => {
+    const {source, destination} = dropResult;
     // Make sure we have a valid destination
     if (destination === undefined || destination === null) return null;
 

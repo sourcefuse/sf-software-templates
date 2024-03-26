@@ -11,9 +11,10 @@ import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 import Button from 'Components/Button/Button';
 import PagePaper from 'Components/PagePaper';
-import React from 'react';
 import {useNavigate} from 'react-router-dom';
 
+const LIGHT_GREY = 200;
+const DARK_GREY = 700;
 const tiers = [
   {
     title: 'Free',
@@ -35,7 +36,7 @@ const tiers = [
 
 function Subscription() {
   const navigate = useNavigate();
-  function handleCheckOut(amount) {
+  function handleCheckOut(amount: number) {
     navigate('/sourceloop/payment/checkout', {state: {amount, type: 'subscription'}});
   }
   return (
@@ -44,9 +45,13 @@ function Subscription() {
         Our Subscription plans
       </Typography>
       <Grid container spacing={5} alignItems="flex-end">
-        {tiers.map((tier) => (
+        {tiers.map(tier => (
           <Grid item key={tier.title} xs={12} sm={6} md={4}>
-            <Card sx={{border: (theme) => (theme.palette.mode === 'light' ? '' : '1px solid')}}>
+            <Card
+              sx={{
+                border: theme => (theme.palette.mode === 'light' ? '' : '1px solid'),
+              }}
+            >
               <CardHeader
                 title={tier.title}
                 subheader={tier.subheader}
@@ -56,8 +61,8 @@ function Subscription() {
                   align: 'center',
                 }}
                 sx={{
-                  backgroundColor: (theme) =>
-                    theme.palette.mode === 'light' ? theme.palette.grey[200] : theme.palette.grey[700],
+                  backgroundColor: theme =>
+                    theme.palette.mode === 'light' ? theme.palette.grey[LIGHT_GREY] : theme.palette.grey[DARK_GREY],
                 }}
               />
               <CardContent>
@@ -75,7 +80,7 @@ function Subscription() {
                   <Typography color="text.secondary">/mo</Typography>
                 </Box>
                 <List dense>
-                  {tier.description.map((line) => (
+                  {tier.description.map(line => (
                     <ListItem key={line}>
                       <ListItemText sx={{textAlign: 'center'}} primary={line} />
                     </ListItem>

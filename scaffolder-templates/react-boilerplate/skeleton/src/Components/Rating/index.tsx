@@ -2,20 +2,21 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import StarIcon from '@mui/icons-material/Star';
 import Box from '@mui/material/Box';
-import Rating, {RatingProps} from '@mui/material/Rating';
+import Rating, {RatingProps as MuiRatingProps} from '@mui/material/Rating';
 import {styled} from '@mui/material/styles';
 import {SxProps} from '@mui/system';
-import * as React from 'react';
-interface Props extends RatingProps {
+import React from 'react';
+
+export interface RatingProps extends Omit<MuiRatingProps, 'style'> {
   boxSx?: SxProps;
   styled?: boolean;
   label?: boolean;
-  style?: Object | any;
+  style?: TemplateStringsArray;
   hover?: string | number;
-  labels?: Object | any;
+  labels?: Record<string | number, string>;
 }
 
-const Style = (st: any) => {
+const createStyledRating = (st: TemplateStringsArray) => {
   return styled(Rating)(
     st || {
       '& .MuiRating-iconFilled': {
@@ -28,7 +29,7 @@ const Style = (st: any) => {
   );
 };
 
-const HoverRating: React.FC<Props> = (props) => {
+const HoverRating: React.FC<RatingProps> = props => {
   const {
     boxSx,
     styled,
@@ -50,12 +51,12 @@ const HoverRating: React.FC<Props> = (props) => {
     },
     ...rest
   } = props;
-  if (styled) {
-    const StyledRating: any = Style(style);
+  if (styled && style) {
+    const StyledRating = createStyledRating(style);
     return (
       <Box
         sx={
-          boxSx || {
+          boxSx ?? {
             width: 200,
             display: 'flex',
             alignItems: 'center',
@@ -66,7 +67,7 @@ const HoverRating: React.FC<Props> = (props) => {
         <StyledRating
           value={value}
           {...{
-            getLabelText: (value) => `${value} Heart${value !== 1 ? 's' : ''}`,
+            getLabelText: (value: number) => `${value} Heart${value !== 1 ? 's' : ''}`,
             icon: <FavoriteIcon fontSize="inherit" />,
             emptyIcon: <FavoriteBorderIcon fontSize="inherit" />,
             ...rest,
@@ -80,7 +81,7 @@ const HoverRating: React.FC<Props> = (props) => {
   return (
     <Box
       sx={
-        boxSx || {
+        boxSx ?? {
           width: 200,
           display: 'flex',
           alignItems: 'center',
