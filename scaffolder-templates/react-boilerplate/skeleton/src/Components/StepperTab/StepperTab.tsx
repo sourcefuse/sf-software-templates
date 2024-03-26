@@ -1,9 +1,9 @@
 import {Step, StepConnector, StepLabel, Stepper, StepperProps, styled} from '@mui/material';
 import React, {memo} from 'react';
 
-interface Props {
+export interface StepperTabProps {
   activeStep: number;
-  steps: Array<any>;
+  steps: Array<string>;
   orientation?: StepperProps['orientation'];
 }
 const Connector = styled(
@@ -19,8 +19,9 @@ const Connector = styled(
 }));
 
 const activeColor = 'primary.main';
-
-const StepperTab: React.FC<Props> = ({steps = [], activeStep, orientation = 'horizontal'}) => {
+const GREY_LIGHT = 200;
+const GREY_DARK = 700;
+const StepperTab: React.FC<StepperTabProps> = ({steps = [], activeStep, orientation = 'horizontal'}) => {
   return (
     <Stepper
       orientation={orientation}
@@ -29,7 +30,8 @@ const StepperTab: React.FC<Props> = ({steps = [], activeStep, orientation = 'hor
       sx={{
         marginBottom: 2,
         padding: 2,
-        background: (theme) => (theme.palette.mode === 'light' ? theme.palette.grey[200] : theme.palette.grey[700]),
+        background: theme =>
+          theme.palette.mode === 'light' ? theme.palette.grey[GREY_LIGHT] : theme.palette.grey[GREY_DARK],
         borderRadius: 1,
         justifyContent: 'center',
         '& .Mui-completed , .Mui-active': {
@@ -39,9 +41,9 @@ const StepperTab: React.FC<Props> = ({steps = [], activeStep, orientation = 'hor
         },
       }}
     >
-      {steps.map((label, index) => {
+      {steps.map(label => {
         return (
-          <Step key={`${label}-${index}`}>
+          <Step key={`${label}`}>
             <StepLabel
               sx={{
                 '& .MuiStepLabel-iconContainer': {

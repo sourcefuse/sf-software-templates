@@ -1,29 +1,20 @@
 import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import PropTypes from 'prop-types';
-import React, {memo} from 'react';
+import {memo, ReactNode} from 'react';
 
-const PagePaper = ({title, children}) => {
+const PagePaper = ({title, children, description}: {title: string; children: ReactNode; description?: string}) => {
   return (
-    <Paper>
+    <Paper sx={{padding: ' 20px 0 0 15px', boxShadow: 'none'}}>
       {title && (
-        <>
-          <Typography sx={{padding: 2, textTransform: 'capitalize'}} component="h1" variant="h4">
-            {title}
-          </Typography>
-          <Divider sx={{marginBottom: 2}} />
-        </>
+        <Typography sx={{pl: 2, pt: 2, textTransform: 'capitalize', fontWeight: 'bold'}} component="h1" variant="h4">
+          {title}
+        </Typography>
       )}
+      {description && <Typography sx={{padding: 2, color: '#525252', pb: 0}}>{description}</Typography>}
       <Box sx={{padding: 2}}>{children}</Box>
     </Paper>
   );
-};
-
-PagePaper.propTypes = {
-  title: PropTypes.string,
-  children: PropTypes.node.isRequired,
 };
 
 export default memo(PagePaper);

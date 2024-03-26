@@ -1,8 +1,11 @@
+import {Box} from '@mui/material';
 import List from '@mui/material/List';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Toolbar from '@mui/material/Toolbar';
-import React from 'react';
+import arcLogo from 'Assets/ARC_logo.png';
+import React, {useState} from 'react';
 import {useLocation} from 'react-router-dom';
+import SearchBar from '../SearchBar/SearchBar';
 import sideNavConfig from './sideNavConfig';
 import SideNavLink from './SideNavLink';
 
@@ -10,11 +13,13 @@ interface Props {
   isPermanent: boolean;
   open: boolean;
   drawerWidth: number;
-  toggleDrawer: any;
+  toggleDrawer: React.ReactEventHandler<{}>;
+  isAppBarFullWidth: boolean;
 }
 
-const SideNav: React.FC<Props> = ({isPermanent, drawerWidth, toggleDrawer, open}) => {
+const SideNav: React.FC<Props> = ({isPermanent, drawerWidth, toggleDrawer, open, isAppBarFullWidth}) => {
   const location = useLocation();
+  const [sideNavList, setSideNavList] = useState(sideNavConfig);
 
   return (
     <SwipeableDrawer
@@ -24,6 +29,7 @@ const SideNav: React.FC<Props> = ({isPermanent, drawerWidth, toggleDrawer, open}
         '& .MuiDrawer-paper': {
           width: drawerWidth,
           boxSizing: 'border-box',
+          backgroundColor: 'background.default',
         },
       }}
       variant={isPermanent ? 'persistent' : 'temporary'}
@@ -36,10 +42,19 @@ const SideNav: React.FC<Props> = ({isPermanent, drawerWidth, toggleDrawer, open}
       onClose={toggleDrawer}
       data-testid="sidenav"
     >
-      <Toolbar />
+      {(isAppBarFullWidth || !isPermanent) && (
+        <>
+          <Toolbar />
+          <Toolbar />
+        </>
+      )}
+      <Box sx={{display: 'flex', justifyContent: 'center', my: 2}}>
+        <img src={arcLogo} width="100px" alt="logo" />
+      </Box>
+      <SearchBar componentList={sideNavConfig} updateList={setSideNavList} />
       <List>
-        {sideNavConfig.map((sideNavConfigItem, index) => (
-          <SideNavLink key={`menu-${index}`} location={location} {...sideNavConfigItem} />
+        {sideNavList.map(sideNavConfigItem => (
+          <SideNavLink key={`${sideNavConfigItem.link}`} location={location} {...sideNavConfigItem} />
         ))}
       </List>
     </SwipeableDrawer>

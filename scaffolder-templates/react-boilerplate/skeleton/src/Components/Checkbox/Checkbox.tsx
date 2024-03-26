@@ -1,31 +1,26 @@
 import {
-  Checkbox,
   FormControl,
   FormControlLabel,
-  FormControlProps,
   FormGroup,
-  FormGroupProps,
   FormHelperText,
-  InputLabel,
+  Checkbox as MuiCheckbox,
+  CheckboxProps as MuiCheckboxProps,
 } from '@mui/material';
-import React, {memo} from 'react';
+import InputLabel from 'Components/InputLabel';
+import React, {memo, useCallback} from 'react';
 
-interface Props {
-  id: string;
+export interface CheckboxProps extends Omit<MuiCheckboxProps, 'onChange'> {
   label?: string;
-  value?: any;
-  disabled?: FormControlProps['disabled'];
-  isTouched?: Boolean;
   helperText?: string;
-  errorMessage?: string | Array<any>;
-  returnValue?: Boolean;
-  row?: FormGroupProps['row'];
-  singleSelect?: Boolean;
-  options: Array<Object>;
-  onChange?: ((value: React.ChangeEvent<HTMLInputElement> | Object | string | Array<any>) => void) | any;
+  errorMessage?: string;
+  value?: string | string[];
+  row?: boolean;
+  singleSelect?: boolean;
+  options: Array<{label: string; value: string}>;
+  onChange?: (val: string | string[]) => void;
 }
 
-const MuiCheckbox: React.FC<Props> = ({
+const Checkbox: React.FC<CheckboxProps> = ({
   onChange,
   options = [],
   row = false,
@@ -33,31 +28,21 @@ const MuiCheckbox: React.FC<Props> = ({
   helperText,
   disabled,
   errorMessage,
-  isTouched,
   id,
   value,
   singleSelect,
-  returnValue,
+  ...rest
 }) => {
-  const isError = errorMessage && isTouched && !disabled;
+  const isError = !!errorMessage;
 
-  const handleChange = (e) => {
-    if (singleSelect) {
-      const val = value === e?.target?.name ? '' : e.target.name;
-      if (returnValue) {
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (!onChange) return;
+      if (singleSelect) {
+        const val = value === e?.target?.name ? '' : e.target.name;
         onChange(val);
-      } else {
-        const event = {
-          target: {
-            name: id,
-            value: val,
-          },
-        };
-        onChange(event);
-      }
-    } else if (Array.isArray(value)) {
-      if (returnValue) {
-        const index = value.findIndex((val) => val === e?.target?.value);
+      } else if (Array.isArray(value)) {
+        const index = value.findIndex(val => val === e?.target?.value);
         const newValue = [...value];
         if (index === -1) {
           newValue.push(e.target.value);
@@ -66,30 +51,33 @@ const MuiCheckbox: React.FC<Props> = ({
         }
         onChange(newValue);
       } else {
-        onChange(e);
+        // this is intentional
       }
-    }
-  };
+    },
+    [onChange, singleSelect, value],
+  );
 
   return (
     <FormControl disabled={disabled} data-testid="checkboxFormControl">
-      {label && <InputLabel shrink>{label}</InputLabel>}
+      {label && <InputLabel>{label}</InputLabel>}
       <FormGroup row={row}>
-        {options.map((option: any, index) => (
+        {options.map((option: {label: string; value: string}) => (
           <FormControlLabel
-            key={index}
+            key={option.label}
             control={
-              <Checkbox
+              <MuiCheckbox
                 checked={
                   singleSelect
-                    ? value?.toString() === option?.value.toString()
-                    : Array.isArray(value) && value.some((val) => val === option.value)
+                    ? value === option?.value
+                    : Array.isArray(value) && value.some(val => val === option.value)
                 }
                 onChange={handleChange}
                 value={option.value}
-                name={singleSelect ? option?.value.toString() : id}
+                name={singleSelect ? option?.value : id}
+                {...rest}
               />
             }
+            sx={{marginTop: 1}}
             label={option.label}
           />
         ))}
@@ -99,4 +87,4 @@ const MuiCheckbox: React.FC<Props> = ({
   );
 };
 
-export default memo(MuiCheckbox);
+export default memo(Checkbox);

@@ -1,5 +1,4 @@
-import {render, screen, within} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import {render, screen, within, fireEvent} from '@testing-library/react';
 import React, {useState} from 'react';
 import TransferList from './TransferList';
 
@@ -51,16 +50,18 @@ describe('TransferList', () => {
     const leftCustomList = screen.getByTestId('left');
     const leftSideList = within(leftCustomList).getByRole('list');
     const leftListItem = within(leftSideList).getByRole('button', {name: /left item 1/i});
-    userEvent.click(leftListItem);
+    fireEvent.click(leftListItem);
     const moveRightButton = screen.getByRole('button', {name: /move selected right/i});
     expect(moveRightButton).toBeEnabled();
-    userEvent.click(moveRightButton);
+    fireEvent.click(moveRightButton);
     const leftListItems = within(leftSideList).getAllByRole('button');
-    expect(leftListItems.length).toBe(3);
+    const EXPECTED_LEFT_LIST_ITEMS = 3;
+    expect(leftListItems.length).toBe(EXPECTED_LEFT_LIST_ITEMS);
     const rightCustomList = screen.getByTestId('right');
     const rightSideList = within(rightCustomList).getByRole('list');
     const rightListItems = within(rightSideList).getAllByRole('button');
-    expect(rightListItems.length).toBe(5);
+    const EXPECTED_RIGHT_LIST_ITEMS = 5;
+    expect(rightListItems.length).toBe(EXPECTED_RIGHT_LIST_ITEMS);
   });
 
   it('should be able to move the item from right to left', () => {
@@ -69,23 +70,25 @@ describe('TransferList', () => {
     const rightCustomList = screen.getByTestId('right');
     const rightSideList = within(rightCustomList).getByRole('list');
     const rightListItem = within(rightSideList).getByRole('button', {name: /right item 1/i});
-    userEvent.click(rightListItem);
+    fireEvent.click(rightListItem);
     const moveLeftButton = screen.getByRole('button', {name: /move selected left/i});
     expect(moveLeftButton).toBeEnabled();
-    userEvent.click(moveLeftButton);
+    fireEvent.click(moveLeftButton);
     const rightListItems = within(rightSideList).getAllByRole('button');
-    expect(rightListItems.length).toBe(3);
+    const EXPECTED_RIGHT_LIST_ITEMS = 3;
+    expect(rightListItems.length).toBe(EXPECTED_RIGHT_LIST_ITEMS);
     const leftCustomList = screen.getByTestId('left');
     const leftSideList = within(leftCustomList).getByRole('list');
     const leftListItems = within(leftSideList).getAllByRole('button');
-    expect(leftListItems.length).toBe(5);
+    const EXPECTED_LEFT_LIST_ITEMS = 3;
+    expect(leftListItems.length).toBe(EXPECTED_LEFT_LIST_ITEMS);
   });
 
   it('should be able to move all items from left to right', () => {
     render(<MockTransferList />);
 
     const moveAllRightButton = screen.getByRole('button', {name: /move all right/i});
-    userEvent.click(moveAllRightButton);
+    fireEvent.click(moveAllRightButton);
 
     const leftCustomList = screen.getByTestId('left');
     const leftSideList = within(leftCustomList).getByRole('list');
@@ -102,7 +105,7 @@ describe('TransferList', () => {
     render(<MockTransferList />);
 
     const moveAllLeftButton = screen.getByRole('button', {name: /move all left/i});
-    userEvent.click(moveAllLeftButton);
+    fireEvent.click(moveAllLeftButton);
 
     const rightCustomList = screen.getByTestId('right');
     const rightSideList = within(rightCustomList).getByRole('list');

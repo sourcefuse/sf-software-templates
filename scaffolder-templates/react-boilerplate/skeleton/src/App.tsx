@@ -1,35 +1,33 @@
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import AuthProvider from 'Providers/AuthProvider';
-import ErrorBoundary from 'Providers/ErrorBoundary';
-import NotificationProvider from 'Providers/NotificationProvider';
-import ThemeProvider from 'Providers/theme/ThemeProvider';
-import React from 'react';
-import {QueryClient, QueryClientProvider} from 'react-query';
-import {ReactQueryDevtools} from 'react-query/devtools';
-import {BrowserRouter} from 'react-router-dom';
+import {useEffect} from 'react';
 import AppRoutes from 'Routes/Routes';
-
-const queryClient = new QueryClient();
+import {getRouteConfig} from 'Routes/layoutRouteConfig';
+import {fetchConfigData} from 'redux/config/configThunk';
+import {useAppDispatch} from 'redux/hooks';
+import useConfig from 'Hooks/useConfig';
+import SessionTimeout from 'Components/SessionTimeout/SessionTimeout';
+import useAuth from 'Hooks/useAuth';
 
 function App() {
+  const dispatch = useAppDispatch();
+  const {enableSessionTimeout, expiryTimeInMinute, promptTimeBeforeIdleInMinute} = useConfig().config;
+  const {isLoggedIn} = useAuth();
+
+  useEffect(() => {
+    const dispatchThunk = async () => {
+      await dispatch(fetchConfigData()).unwrap();
+    };
+    dispatchThunk();
+  }, [dispatch]);
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <QueryClientProvider client={queryClient} contextSharing={true}>
-        <BrowserRouter>
-          <ThemeProvider>
-            <ErrorBoundary>
-              <AuthProvider>
-                <NotificationProvider>
-                  <AppRoutes />
-                </NotificationProvider>
-              </AuthProvider>
-            </ErrorBoundary>
-          </ThemeProvider>
-        </BrowserRouter>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </LocalizationProvider>
+    <>
+      <AppRoutes routesConfig={getRouteConfig()} />
+      {enableSessionTimeout && isLoggedIn ? (
+        <SessionTimeout
+          expiryTimeInMinute={expiryTimeInMinute}
+          promptTimeBeforeIdleInMinute={promptTimeBeforeIdleInMinute}
+        />
+      ) : null}
+    </>
   );
 }
 
