@@ -5,8 +5,8 @@ metadata:
   title: ARC - AWS Ref Arch Bootstrap
   description: ARC - AWS Ref Arch Bootstrap
   tags:
-    - terraform
-    - aws
+    - react
+    - cra
 spec:
   owner: sourcefuse.com
   type: website
@@ -64,11 +64,11 @@ spec:
             allowedHosts:
               - github.com
   steps:
-    - id: template
-      name: Fetch Skeleton + Template
+    - id: fetch-base
+      name: Fetch Base
       action: fetch:template
       input:
-        url: ./skeleton
+        url: ./content
         copyWithoutRender:
           - .github/workflows/*
         values:
@@ -80,6 +80,13 @@ spec:
           description: ${{ parameters.description }}
           destination: ${{ parameters.repoUrl | parseRepoUrl }}
           owner: ${{ parameters.owner }}
+
+    - id: fetch-docs
+      name: Fetch Docs
+      action: fetch:plain
+      input:
+        targetPath: ./
+        url: https://github.com/sourcefuse/terraform-aws-arc-bootstrap
 
     - id: publish
       name: Publish

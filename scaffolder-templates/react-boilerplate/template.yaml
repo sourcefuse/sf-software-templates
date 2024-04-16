@@ -39,11 +39,11 @@ spec:
             allowedHosts:
               - github.com
   steps:
-    - id: template
-      name: Fetch Skeleton + Template
+    - id: fetch-base
+      name: Fetch Base
       action: fetch:template
       input:
-        url: ./skeleton
+        url: ./content
         copyWithoutRender:
           - .github/workflows/*
         values:
@@ -51,6 +51,14 @@ spec:
           description: ${{ parameters.description }}
           destination: ${{ parameters.repoUrl | parseRepoUrl }}
           backstage_namespace: ${{ parameters.backstage_namespace }}
+
+    - id: fetch-docs
+      name: Fetch Docs
+      action: fetch:plain
+      input:
+        targetPath: ./
+        url: https://github.com/sourcefuse/react-boilerplate-ts-ui
+
 
     - id: publish
       name: Publish
