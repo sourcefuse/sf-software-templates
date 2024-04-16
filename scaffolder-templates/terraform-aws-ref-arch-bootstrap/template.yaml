@@ -5,8 +5,8 @@ metadata:
   title: ARC - AWS Ref Arch Bootstrap
   description: ARC - AWS Ref Arch Bootstrap
   tags:
-    - react
-    - cra
+    - terraform
+    - aws
 spec:
   owner: sourcefuse.com
   type: website
