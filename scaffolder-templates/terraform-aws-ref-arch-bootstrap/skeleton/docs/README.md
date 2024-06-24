@@ -1,5 +1,4 @@
 ## ${{ values.name }}
-
 ## Overview
 
 ${{ values.description }}
