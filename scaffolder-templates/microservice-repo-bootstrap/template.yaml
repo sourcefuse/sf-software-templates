@@ -178,6 +178,12 @@ spec:
       action: run:extension
       input:
         extensions: ${{ parameters.packages }}
+    - id: fetch-docs
+      name: Fetch Docs
+      action: fetch:plain
+      input:
+        targetPath: ./
+        url: https://github.com/sourcefuse/loopback4-microservice-catalog/blob/master/README.md
     - id: publish
       name: Publish
       action: publish:github
